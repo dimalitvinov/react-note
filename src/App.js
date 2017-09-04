@@ -3,84 +3,98 @@ import logo from './logo.svg';
 import './App.css';
 import Web3 from 'web3';
 
-var ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+let ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
+let NotesContractAddress = '0xabb9cfe25d785222852d7d638fefe1034d2ce289';
+let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
-var NotesContractABI = [{"constant":false,"inputs":[{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"}];
-
-var NotesContractAddress = '0xb444e3fce758ec72e979cae5803cdeb819336ea6';
-var NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
-
-// ETHEREUM_CLIENT.fromWei(ETHEREUM_CLIENT.eth.getBalance(ETHEREUM_CLIENT.eth.coinbase), "ether");
-// function checkAllBalances() {
-//     var totalBal = 0;
-//     for (var acctNum in ETHEREUM_CLIENT.eth.accounts) {
-//         var acct = ETHEREUM_CLIENT.eth.accounts[acctNum];
-//         var acctBal = ETHEREUM_CLIENT.fromWei(ETHEREUM_CLIENT.eth.getBalance(acct), "ether");
-//         totalBal += parseFloat(acctBal);
-//         console.log("  eth.accounts[" + acctNum + "]: \t" + acct + " \tbalance: " + acctBal + " ether");
-//     }
-//     console.log("  Total balance: " + totalBal + " ether");
-// };
-// checkAllBalances();
-
-// var seconds = new Date().getTime() / 1000;
 
 class App extends Component {
 
-  constructor(props) {
-      super(props);
+    constructor(props) {
+        super(props);
 
-      var data = NotesContract.getNotes();
-      var html = [];
-      for (var i = 0; i < data.length; i++) {
-        html.push(<div>{data[i]}</div>);
-      }
+        this.state = {
+            id: [],
+            text: [],
+            newText: '',
+        }
+    }
 
-      this.state = {
-          text: [],
-          allText: html,
-      }
-  }
+    getNotes() {
+        let rawNotes = NotesContract.getNotes();
+        this.setState({
+            id: String(rawNotes[0]).split(','),
+            text: String(rawNotes[1]).split(',')
+        });
+    }
 
-  getNotes() {
-      var data = NotesContract.getNotes();
-      var html = [];
-      for (var i = 0; i < data.length; i++) {
-        html.push(<div>{data[i]}</div>);
-      }
+    componentWillMount() {
+        this.getNotes();
+    }
 
-      this.setState({allText: html});
-  }
+    addNewNote() {
+        let result = NotesContract.addNote.sendTransaction(parseInt(Date.now()), this.state.newText, {
+            from: ETHEREUM_CLIENT.eth.accounts[0],
+            gas: 3000000
+        });
+        this.getNotes();
+    }
 
-  componentDidMount() {
-      this.getNotes();
-  }
+    removeNote(id) {
+        let item = NotesContract.removeNote.sendTransaction(id, {
+            from: ETHEREUM_CLIENT.eth.accounts[0],
+            gas: 3000000
+        });
+        this.getNotes();
+    }
 
-  addNewNote() {
-      var result = NotesContract.addNote.sendTransaction(this.state.text, {from: ETHEREUM_CLIENT.eth.accounts[0], gas: 3000000,});
-      this.setState({text: this.state.allText})
-      this.getNotes();
-  }
+    render() {
+        let allNotes = [];
 
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>A NoteChain</h2>
-        </div>
-        <div>
-            <input placeholder='New note' onChange={event => this.setState({text: event.target.value})}/>
-            <button onClick={() => this.addNewNote()}>
-                Submit
-            </button>
-        </div>
-        <div>
-            {this.state.allText}
-        </div>
-      </div>
-    );
-  }
+        let hexToAscii = function(hex) {
+            let str = '',
+                i = 0,
+                l = hex.length;
+            if (hex.substring(0, 2) === '0x') {
+                i = 2;
+            }
+            for (; i < l; i+=2) {
+                let code = parseInt(hex.substr(i, 2), 16);
+                if (code === 0) continue; // this is added
+                str += String.fromCharCode(code);
+            }
+            return str;
+        };
+
+        this.state.text.forEach((item, i) => {
+            allNotes.unshift(
+                <div>
+                    <div className="list__item">{hexToAscii(this.state.text[i])}</div>
+                    <div>edit</div>
+                    <div id={this.state.id[i]} onClick={event => this.removeNote(event.target.id)}>x</div>
+                </div>
+            );
+        });
+
+        return (
+            <div className="App">
+                <div className="App-header">
+                    <img src={logo} className="App-logo" alt="logo"/>
+                    <h2>A NoteChain</h2>
+                </div>
+                <div>
+                    <input placeholder='New note' onChange={event => this.setState({newText: event.target.value})}/>
+                    <button onClick={() => this.addNewNote()}>
+                        Submit
+                    </button>
+                </div>
+                <div>
+                    {allNotes}
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
