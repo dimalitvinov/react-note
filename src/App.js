@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './ethereum.png';
 import './App.css';
 import Web3 from 'web3';
 
 let ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
-let NotesContractAddress = '0xabb9cfe25d785222852d7d638fefe1034d2ce289';
+let NotesContractAddress = '0x55a943df447b69c19d95b4c67122e2e11432ac1e';
 let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
 class App extends Component {
@@ -68,23 +68,24 @@ class App extends Component {
 
         this.state.text.forEach((item, i) => {
             allNotes.unshift(
-                <div>
-                    <div className="list__item">{hexToAscii(this.state.text[i])}</div>
-                    <div>edit</div>
-                    <div id={this.state.id[i]} onClick={event => this.removeNote(event.target.id)}>x</div>
+                <div className="list__item">
+                    <div className="list__text">{hexToAscii(this.state.text[i])}</div>
+                    <div className="list__icon list__icon--edit">&#8249;</div>
+                    <div className="list__icon list__icon--rm" id={this.state.id[i]} onClick={event => this.removeNote(event.target.id)}>&#215;</div>
                 </div>
             );
         });
 
         return (
-            <div className="App">
-                <div className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <h2>A NoteChain</h2>
+            <div className="main">
+                <div className="main__header">
+                    <img src={logo} className="main__logo" alt="logo"/>
+                    <h2 className="main__title">A NoteChain</h2>
                 </div>
                 <div>
-                    <input placeholder='New note' onChange={event => this.setState({newText: event.target.value})}/>
-                    <button onClick={() => this.addNewNote()}>
+                    <input autofocus className="main__input" placeholder='Type your note here' onChange={event => this.setState({newText: event.target.value})}/>
+                    <br/>
+                    <button className="main__btn" onClick={() => this.addNewNote()}>
                         Submit
                     </button>
                 </div>

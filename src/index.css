@@ -1,5 +1,46 @@
+html,
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+	margin: 0;
+	padding: 0;
 }
+
+body {
+  font: 16px 'Work Sans', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+	color: #4d4d4d;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+input {
+  font: 16px 'Work Sans', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+::-webkit-input-placeholder {
+  font: 28px 'Work Sans', Helvetica, Arial, sans-serif;
+  font-weight: 200;
+  color: #aaa;
+  text-align: center;
+}
+::-moz-placeholder          {color:#c0392b;}/* Firefox 19+ */
+:-moz-placeholder           {color:#c0392b;}/* Firefox 18- */
+:-ms-input-placeholder      {color:#c0392b;}
+
+/*box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
+      0 25px 50px 0 rgba(0, 0, 0, 0.15);*/

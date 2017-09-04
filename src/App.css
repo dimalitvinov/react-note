@@ -1,24 +1,95 @@
-.App {
+.main {
   text-align: center;
+  font: 16px 'Work Sans', Helvetica, Arial, sans-serif;
+  font-weight: 300;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
+.main__logo {
+  animation: main__logo-spin infinite 20s linear;
   height: 80px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
+@keyframes main__logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.main__header {
+  background-color: rgba(0,0,0);
+  height: 150px;
+  padding: 20px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.main__title {
+  font-size: 36px;
+  font-weight: 200;
+}
+
+.main__input {
+  max-width: 300px;
+  width: 100%;
+  height: 60px;
+  font-size: 28px;
+  font-weight: 100;
+  border: none;
+  margin: 0;
+}
+
+.main__btn {
+  max-width: 300px;
+  width: 100%;
+  height: 60px;
+  cursor: pointer;
+	margin: 0 0 50px;
+	padding: 0;
+	border: 0;
+  background: none;
+  font-size: 20px;
+  color: #555;
+	-webkit-appearance: none;
+	-ms-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+}
+
+
+.list__item {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  margin: 15px auto;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.list__text {
+  text-align: left;
+  max-width: 300px;
+  width: 100%;
+}
+
+.list__icon {
+  max-width: 50px;
+  min-width: 50px;
+  width: 100%;
+  max-height: 50px;
+  min-height: 50px;
+  height: 100%;
+  cursor: pointer;
+  font-size: 24px;
+  margin-top: -3px;
+}
+
+.list__icon--edit {
+  margin-top: -4px;
+}
+
+.list__icon--edit:hover {
+  color: #000;
+}
+
+.list__icon--rm:hover {
+  color: #000;
 }
