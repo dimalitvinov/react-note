@@ -5,9 +5,9 @@ import Web3 from 'web3';
 
 var ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-var NotesContractABI = [{"constant":false,"inputs":[{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"}];
+var NotesContractABI = [{"constant":false,"inputs":[{"name":"newText","type":"bytes32"},{"name":"curId","type":"uint256"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"text","type":"bytes32"},{"name":"id","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"bytes32[]"},{"name":"","type":"uint256[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_text","type":"bytes32"},{"name":"_id","type":"uint256"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"}];
 
-var NotesContractAddress = '0xb444e3fce758ec72e979cae5803cdeb819336ea6';
+var NotesContractAddress = '0x3b9cd4a5b118495c97d0fb1f190cbe8f6ab7ba95';
 var NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
 // ETHEREUM_CLIENT.fromWei(ETHEREUM_CLIENT.eth.getBalance(ETHEREUM_CLIENT.eth.coinbase), "ether");
