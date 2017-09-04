@@ -8,7 +8,6 @@ let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}]
 let NotesContractAddress = '0xabb9cfe25d785222852d7d638fefe1034d2ce289';
 let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
-
 class App extends Component {
 
     constructor(props) {
