@@ -17,7 +17,17 @@ class App extends Component {
             id: [],
             text: [],
             newText: '',
+            edit: false,
         }
+
+        this.editNote = this.editNote.bind(this);
+    }
+
+    editNote(){
+        this.setState({
+            edit:       true,
+            oldUser:    this.state.user
+        });
     }
 
     getNotes() {
@@ -69,9 +79,20 @@ class App extends Component {
         this.state.text.forEach((item, i) => {
             allNotes.unshift(
                 <div className="list__item">
-                    <div className="list__text">{hexToAscii(this.state.text[i])}</div>
-                    <div className="list__icon list__icon--edit">&#8249;</div>
-                    <div className="list__icon list__icon--rm" id={this.state.id[i]} onClick={event => this.removeNote(event.target.id)}>&#215;</div>
+                    <div className="list__text">{hexToAscii(this.state.text[i])}
+                    </div>
+                    <input className="list__input--hidden" value={this.state.text}
+                           onChange={this.changeText}
+                           action
+                           disabled={this.state.edit === false}/>
+                    <div className="list__icon list__icon--edit"
+                            disabled={this.state.edit === true}
+                            onClick={this.editNote}>&#8249;
+                    </div>
+                    <div className="list__icon list__icon--rm"
+                         id={this.state.id[i]}
+                         onClick={event => this.removeNote(event.target.id)}>&#215;
+                     </div>
                 </div>
             );
         });
@@ -83,7 +104,10 @@ class App extends Component {
                     <h2 className="main__title">A NoteChain</h2>
                 </div>
                 <div>
-                    <input autofocus className="main__input" placeholder='Type your note here' onChange={event => this.setState({newText: event.target.value})}/>
+                    <input autoFocus={true}
+                           className="main__input"
+                           placeholder='Type your note here'
+                           onChange={event => this.setState({newText: event.target.value})}/>
                     <br/>
                     <button className="main__btn" onClick={() => this.addNewNote()}>
                         Submit

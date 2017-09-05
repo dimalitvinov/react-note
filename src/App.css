@@ -98,3 +98,7 @@
 .list__icon--rm:hover {
   color: #4d4d4d;
 }
+
+.list__input--hidden {
+    display: none;
+}
