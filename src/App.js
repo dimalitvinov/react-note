@@ -5,7 +5,7 @@ import Web3 from 'web3';
 
 let ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
-let NotesContractAddress = '0xdb400744013c9b8177329050aad18c32c0f21625';
+let NotesContractAddress = '0xe92a865ab735eac0b5f9e7b293f28d6c2bb3acd3';
 let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
 class App extends Component {
@@ -23,10 +23,13 @@ class App extends Component {
         this.editNote = this.editNote.bind(this);
     }
 
+    // handleInput(){
+    //
+    // }
+
     editNote(){
         this.setState({
             edit:       true,
-            oldUser:    this.state.user
         });
     }
 
@@ -78,20 +81,18 @@ class App extends Component {
 
         this.state.text.forEach((item, i) => {
             allNotes.unshift(
-                <div className="list__item">
-                    <div className="list__text">{hexToAscii(this.state.text[i])}
-                    </div>
-                    <input className="list__input--hidden" value={this.state.text}
-                           onChange={this.changeText}
-                           action
-                           disabled={this.state.edit === false}/>
+                <div id={this.state.id[i]} className="list__item">
+                    <div className="list__text">{hexToAscii(this.state.text[i])}</div>
+                    <input className="list__input--hidden" value={this.state.newText}
+                           onChange={event => this.setState({text: event.target.value})}
+                           onClick={() => {this.handleInput(this.state.id[i], this.state.text[i])}}
+                           disabled={this.state.edit}
+                       />
                     <div className="list__icon list__icon--edit"
-                            disabled={this.state.edit === true}
                             onClick={this.editNote}>&#8249;
                     </div>
                     <div className="list__icon list__icon--rm"
-                         id={this.state.id[i]}
-                         onClick={event => this.removeNote(event.target.id)}>&#215;
+                         onClick={event => this.removeNote(event.target.parentNode.id)}>&#215;
                      </div>
                 </div>
             );
