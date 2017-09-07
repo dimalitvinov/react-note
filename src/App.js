@@ -80,22 +80,27 @@ class App extends Component {
         };
 
         this.state.text.forEach((item, i) => {
-            allNotes.unshift(
-                <div id={this.state.id[i]} className="list__item">
-                    <div className="list__text">{hexToAscii(this.state.text[i])}</div>
-                    <input className="list__input--hidden" value={this.state.newText}
-                           onChange={event => this.setState({text: event.target.value})}
-                           onClick={() => {this.handleInput(this.state.id[i], this.state.text[i])}}
-                           disabled={this.state.edit}
-                       />
-                    <div className="list__icon list__icon--edit"
-                            onClick={this.editNote}>&#8249;
+
+            if (this.state.text[0] === '') {
+              allNotes.unshift();
+            } else {
+              allNotes.unshift(
+                    <div id={this.state.id[i]} className="list__item">
+                        <div className="list__text">{hexToAscii(this.state.text[i])}</div>
+                        <input className="list__input--hidden" value={this.state.newText}
+                               onChange={event => this.setState({text: event.target.value})}
+                               onClick={() => {this.handleInput(this.state.id[i], this.state.text[i])}}
+                               disabled={this.state.edit}
+                           />
+                        <div className="list__icon list__icon--edit"
+                                onClick={this.editNote}>&#8249;
+                        </div>
+                        <div className="list__icon list__icon--rm"
+                             onClick={event => this.removeNote(event.target.parentNode.id)}>&#215;
+                         </div>
                     </div>
-                    <div className="list__icon list__icon--rm"
-                         onClick={event => this.removeNote(event.target.parentNode.id)}>&#215;
-                     </div>
-                </div>
-            );
+                );
+            };
         });
 
         return (
