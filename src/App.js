@@ -5,7 +5,7 @@ import Web3 from 'web3';
 
 let ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
-let NotesContractAddress = '0xe92a865ab735eac0b5f9e7b293f28d6c2bb3acd3';
+let NotesContractAddress = '0xfa93fe1c301530a38ba524fd4bf9bfbeb3bc2508';
 let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
 class App extends Component {
@@ -17,21 +17,30 @@ class App extends Component {
             id: [],
             text: [],
             newText: '',
-            edit: false,
-        }
+        };
+
+        // this.blurring = this.blurring.bind(this);
+
+        this.handleInput = this.handleInput.bind(this);
 
         this.editNote = this.editNote.bind(this);
     }
 
-    // handleInput(){
-    //
-    // }
-
     editNote(){
-        this.setState({
-            edit:       true,
-        });
+      let item = NotesContract.editNote.sendTransaction(this.state.id, this.state.newText, {
+          from: ETHEREUM_CLIENT.eth.accounts[0],
+          gas: 3000000
+      });
+      this.getNotes();
     }
+
+    handleInput(event){
+      this.setState({newText: event.target.value});
+      console.log('lol');
+      this.editNote();
+    }
+
+
 
     getNotes() {
         let rawNotes = NotesContract.getNotes();
@@ -73,24 +82,25 @@ class App extends Component {
             }
             for (; i < l; i+=2) {
                 let code = parseInt(hex.substr(i, 2), 16);
-                if (code === 0) continue; // this is added
+                if (code === 0) continue;
                 str += String.fromCharCode(code);
             }
             return str;
         };
 
         this.state.text.forEach((item, i) => {
-
+            // let oldText = this.props.text;
             if (this.state.text[0] === '') {
               allNotes.unshift();
             } else {
               allNotes.unshift(
+
                     <div id={this.state.id[i]} className="list__item">
                         <div className="list__text">{hexToAscii(this.state.text[i])}</div>
-                        <input className="list__input--hidden" value={this.state.newText}
-                               onChange={event => this.setState({text: event.target.value})}
-                               onClick={() => {this.handleInput(this.state.id[i], this.state.text[i])}}
-                               disabled={this.state.edit}
+                        <input className="list__input--hiddennnn"
+                              value={this.state.newText[i]}
+                              // onChange={this.handleInput[i]}
+                              onBlur={this.handleInput[i]}
                            />
                         <div className="list__icon list__icon--edit"
                                 onClick={this.editNote}>&#8249;
