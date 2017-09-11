@@ -17,30 +17,32 @@ class App extends Component {
             id: [],
             text: [],
             newText: '',
+            newNote: '',
         };
 
-        // this.blurring = this.blurring.bind(this);
-
         this.handleInput = this.handleInput.bind(this);
-
-        this.editNote = this.editNote.bind(this);
-    }
-
-    editNote(){
-      let item = NotesContract.editNote.sendTransaction(this.state.id, this.state.newText, {
-          from: ETHEREUM_CLIENT.eth.accounts[0],
-          gas: 3000000
-      });
-      this.getNotes();
+        // this.editNote = this.editNote.bind(this);
     }
 
     handleInput(event){
       this.setState({newText: event.target.value});
-      console.log('lol');
-      this.editNote();
+      console.log(this.state.newText);
+      // this.editNote();
     }
 
+    editNote(){
+      console.log(this.state.newText);
+      // let item = NotesContract.editNote.sendTransaction(this.state.id, this.state.newText, {
+      //     from: ETHEREUM_CLIENT.eth.accounts[0],
+      //     gas: 3000000
+      // });
+      this.getNotes();
+    }
 
+    updateNote(){
+      // this.handleInput(event);
+      this.editNote();
+    }
 
     getNotes() {
         let rawNotes = NotesContract.getNotes();
@@ -55,7 +57,7 @@ class App extends Component {
     }
 
     addNewNote() {
-        let result = NotesContract.addNote.sendTransaction(parseInt(Date.now()), this.state.newText, {
+        let result = NotesContract.addNote.sendTransaction(parseInt(Date.now()), this.state.newNote, {
             from: ETHEREUM_CLIENT.eth.accounts[0],
             gas: 3000000
         });
@@ -89,7 +91,6 @@ class App extends Component {
         };
 
         this.state.text.forEach((item, i) => {
-            // let oldText = this.props.text;
             if (this.state.text[0] === '') {
               allNotes.unshift();
             } else {
@@ -99,8 +100,8 @@ class App extends Component {
                         <div className="list__text">{hexToAscii(this.state.text[i])}</div>
                         <input className="list__input--hiddennnn"
                               value={this.state.newText[i]}
-                              // onChange={this.handleInput[i]}
-                              onBlur={this.handleInput[i]}
+                              onChange={this.handleInput[i]}
+                              onBlur={event => this.updateNote(event.target.parentNode.id)}
                            />
                         <div className="list__icon list__icon--edit"
                                 onClick={this.editNote}>&#8249;
@@ -123,7 +124,7 @@ class App extends Component {
                     <input autoFocus={true}
                            className="main__input"
                            placeholder='Type your note here'
-                           onChange={event => this.setState({newText: event.target.value})}/>
+                           onChange={event => this.setState({newNote: event.target.value})}/>
                     <br/>
                     <button className="main__btn" onClick={() => this.addNewNote()}>
                         Submit
