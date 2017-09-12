@@ -42,5 +42,13 @@ button:focus {
 :-moz-placeholder           {color:#c0392b;}/* Firefox 18- */
 :-ms-input-placeholder      {color:#c0392b;}
 
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 /*box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
       0 25px 50px 0 rgba(0, 0, 0, 0.15);*/
