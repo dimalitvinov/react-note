@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import Item from './Item';
 import logo from './ethereum.png';
 import './App.css';
 import Web3 from 'web3';
 
 let ETHEREUM_CLIENT = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-let NotesContractABI = [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
-let NotesContractAddress = '0xfa93fe1c301530a38ba524fd4bf9bfbeb3bc2508';
+let NotesContractABI =
+[{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"notes","outputs":[{"name":"id","type":"uint256"},{"name":"text","type":"bytes32"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"uint256"},{"name":"_text","type":"bytes32"}],"name":"addNote","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"uint256"}],"name":"removeNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getNotes","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"bytes32[]"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"curId","type":"uint256"},{"name":"newText","type":"bytes32"}],"name":"editNote","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
+let NotesContractAddress = '0x26dff05e34f2623cb6df1399b2d737281bbf1154';
 let NotesContract = ETHEREUM_CLIENT.eth.contract(NotesContractABI).at(NotesContractAddress);
 
 class App extends Component {
@@ -14,42 +16,52 @@ class App extends Component {
         super(props);
 
         this.state = {
-            id: [],
-            text: [],
-            newText: '',
-            newNote: '',
+            items: []
         };
-
-        this.handleInput = this.handleInput.bind(this);
-        // this.editNote = this.editNote.bind(this);
     }
 
-    handleInput(event){
-      this.setState({newText: event.target.value});
-      console.log(this.state.newText);
-      // this.editNote();
-    }
+    hexToAscii = hex => {
+        let str = '',
+            i = 0,
+            l = hex.length;
+        if (hex.substring(0, 2) === '0x') {
+            i = 2;
+        }
+        for (; i < l; i += 2) {
+            let code = parseInt(hex.substr(i, 2), 16);
+            if (code === 0)
+                continue;
+            str += String.fromCharCode(code);
+        }
+        return str;
+    };
 
-    editNote(){
-      console.log(this.state.newText);
-      // let item = NotesContract.editNote.sendTransaction(this.state.id, this.state.newText, {
-      //     from: ETHEREUM_CLIENT.eth.accounts[0],
-      //     gas: 3000000
-      // });
-      this.getNotes();
-    }
-
-    updateNote(){
-      // this.handleInput(event);
-      this.editNote();
-    }
-
-    getNotes() {
-        let rawNotes = NotesContract.getNotes();
-        this.setState({
-            id: String(rawNotes[0]).split(','),
-            text: String(rawNotes[1]).split(',')
+    editNote = field => {
+        let item = NotesContract.editNote.sendTransaction(field.id, field.text, {
+            from: ETHEREUM_CLIENT.eth.accounts[0],
+            gas: 3000000
         });
+    }
+
+    getNotes = () => {
+        let rawNotes = NotesContract.getNotes(),
+            listID = String(rawNotes[0]).split(','),
+            listText = String(rawNotes[1]).split(',');
+
+        let newItems = listID.map((item, index) => {
+            if (item !== '') {
+                return {
+                    id: item,
+                    text: this.hexToAscii(listText[index])
+                };
+            }
+        })
+
+        newItems = newItems[0] === undefined
+            ? []
+            : newItems;
+
+        this.setState({items: newItems});
     }
 
     componentWillMount() {
@@ -75,45 +87,6 @@ class App extends Component {
     render() {
         let allNotes = [];
 
-        let hexToAscii = function(hex) {
-            let str = '',
-                i = 0,
-                l = hex.length;
-            if (hex.substring(0, 2) === '0x') {
-                i = 2;
-            }
-            for (; i < l; i+=2) {
-                let code = parseInt(hex.substr(i, 2), 16);
-                if (code === 0) continue;
-                str += String.fromCharCode(code);
-            }
-            return str;
-        };
-
-        this.state.text.forEach((item, i) => {
-            if (this.state.text[0] === '') {
-              allNotes.unshift();
-            } else {
-              allNotes.unshift(
-
-                    <div id={this.state.id[i]} className="list__item">
-                        <div className="list__text">{hexToAscii(this.state.text[i])}</div>
-                        <input className="list__input--hiddennnn"
-                              value={this.state.newText[i]}
-                              onChange={this.handleInput[i]}
-                              onBlur={event => this.updateNote(event.target.parentNode.id)}
-                           />
-                        <div className="list__icon list__icon--edit"
-                                onClick={this.editNote}>&#8249;
-                        </div>
-                        <div className="list__icon list__icon--rm"
-                             onClick={event => this.removeNote(event.target.parentNode.id)}>&#215;
-                         </div>
-                    </div>
-                );
-            };
-        });
-
         return (
             <div className="main">
                 <div className="main__header">
@@ -131,7 +104,13 @@ class App extends Component {
                     </button>
                 </div>
                 <div>
-                    {allNotes}
+                    {this.state.items.map(item => {
+                        return (<Item key={item.id}
+                                      showDelete={this.state.items.length != 0}
+                                      saveValue={this.editNote}
+                                      remove={() => this.removeNote(item.id)} {...item}
+                                />)
+                    })}
                 </div>
             </div>
         );
