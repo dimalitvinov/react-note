@@ -24,28 +24,31 @@ class Item extends Component {
     this.setState({isFocused: true});
   }
 
-  onBlur() {
+  onBlur = () => {
     this.setState({isFocused: false});
   }
 
   render() {
-    let classHide = [];
-    let classShow = ['hidden'];
+    let field = undefined;
+
     if (this.state.isFocused) {
-      classHide.push('hidden');
-      classShow.push('show');
+        field = (
+            <input autoFocus
+                onfocus="var val=this.value; this.value=''; this.value= val;"
+                   onBlur={this.onBlur}
+                   onChange={this.valueChange}
+                   ref={'input'}
+                   value={this.state.text}/>
+        );
+    }else{
+        field = (
+            <div onClick={this.handleClick}>{this.state.text}</div>
+        );
     }
 
     return (
       <div id={this.state.id} className="list__item">
-        <div className={classHide.join(' ')}
-             onClick={this.handleClick.bind(this)}>{this.state.text}</div>
-        <input className={classShow.join(' ')}
-               autoFocus={true}
-               onBlur={this.onBlur.bind(this)}
-               onChange={this.valueChange}
-               ref={'input'}
-               value={this.state.text}/>
+        {field}
         {this.props.showDelete
           ? <div className="list__icon list__icon--rm"
                  onClick={this.props.remove}>&#215;</div>
