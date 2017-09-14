@@ -34,15 +34,15 @@ class Item extends Component {
     if (this.state.isFocused) {
         field = (
             <input autoFocus
-                onfocus="var val=this.value; this.value=''; this.value= val;"
                    onBlur={this.onBlur}
                    onChange={this.valueChange}
+                   className="list__input"
                    ref={'input'}
                    value={this.state.text}/>
         );
-    }else{
+    } else {
         field = (
-            <div onClick={this.handleClick}>{this.state.text}</div>
+            <div onClick={this.handleClick} className="list__text">{this.state.text}</div>
         );
     }
 

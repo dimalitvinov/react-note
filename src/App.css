@@ -59,6 +59,7 @@
   max-width: 400px;
   width: 100%;
   display: flex;
+  align-items: center;
   margin: 15px auto;
   text-align: center;
   padding: 0 10px;
@@ -70,9 +71,29 @@
 }
 
 .list__text {
+  align-items: center;
+  display: flex;
   text-align: left;
   max-width: 300px;
   width: 100%;
+  min-height: 50px;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+  white-space: normal;
+}
+
+.list__input {
+    text-align: left;
+    max-width: 300px;
+    width: 100%;
+    min-height: 20px;
+    box-sizing: border-box;
+    padding: 0;
+    font-size: 16px;
+    line-height: 20px;
+    border: none;
+    outline: none;
 }
 
 .list__icon {
@@ -84,21 +105,11 @@
   height: 100%;
   cursor: pointer;
   font-size: 24px;
-  margin-top: -3px;
-}
-
-.list__icon--edit {
-  margin-top: -4px;
-}
-
-.list__icon--edit:hover {
-  color: #4d4d4d;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
 .list__icon--rm:hover {
   color: #4d4d4d;
-}
-
-.list__input--hidden {
-    display: none;
 }
