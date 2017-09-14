@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import Item from './Item';
-import logo from './ethereum.png';
 import './App.css';
-import Web3 from 'web3';
+import logo from './ethereum.png';
 import * as config from './config.js';
 
 class App extends Component {
@@ -79,9 +78,8 @@ class App extends Component {
         this.getNotes();
     }
 
-    render() {
-        let allNotes = [];
 
+    render() {
         return (
             <div className="main">
                 <div className="main__header">
@@ -89,7 +87,7 @@ class App extends Component {
                     <h2 className="main__title">A NoteChain</h2>
                 </div>
                 <div>
-                    <input autoFocus={true}
+                    <input autoFocus
                            className="main__input"
                            placeholder='Type your note here'
                            onChange={event => this.setState({newNote: event.target.value})}/>
@@ -105,7 +103,7 @@ class App extends Component {
                                       saveValue={this.editNote}
                                       remove={() => this.removeNote(item.id)} {...item}
                                 />)
-                    })}
+                    }).reverse()}
                 </div>
             </div>
         );

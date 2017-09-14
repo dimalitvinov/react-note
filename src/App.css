@@ -56,7 +56,7 @@
 
 
 .list__item {
-  max-width: 400px;
+  max-width: 350px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -69,6 +69,24 @@
 .list__item:hover {
     color: #000;
 }
+
+/*.list__item:hover .list__icon--rm {
+  max-width: 50px;
+  min-width: 50px;
+  width: 100%;
+  max-height: 50px;
+  min-height: 50px;
+  height: 100%;
+  cursor: pointer;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.list__icon--rm:hover {
+  color: #4d4d4d;
+}*/
 
 .list__text {
   align-items: center;
@@ -96,7 +114,7 @@
     outline: none;
 }
 
-.list__icon {
+.list__icon--rm {
   max-width: 50px;
   min-width: 50px;
   width: 100%;

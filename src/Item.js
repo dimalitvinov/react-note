@@ -50,7 +50,7 @@ class Item extends Component {
       <div id={this.state.id} className="list__item">
         {field}
         {this.props.showDelete
-          ? <div className="list__icon list__icon--rm"
+          ? <div className="list__icon--rm"
                  onClick={this.props.remove}>&#215;</div>
           : undefined
         }
