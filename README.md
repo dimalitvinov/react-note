@@ -31,7 +31,7 @@ truffle console
 ```
 copy abi and paste in "config.js" like as "NotesContractABI"
 
-## now you can run a react-note
+## Now you can run a react-note
 
 in /react-note run
 ```shell
@@ -41,4 +41,4 @@ npm start
 
 then visit http://localhost:3000
 
-## and GO!
+## And GO!
