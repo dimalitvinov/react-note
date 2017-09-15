@@ -33,7 +33,7 @@ in /react-note run
 npm install
 ```
 
-then, you need to know your smart-contract address and abi
+then, you need to know your smart-contract provider, address and abi
 in /ethereum-note run
 ```shell
 truffle console
@@ -48,7 +48,10 @@ truffle console
 ```
 copy abi and paste in "/react-note/src/config.js" like as "NotesContractABI"
 
-in /react-note run
+set in ETHEREUM_CLIENT line
+HttpProvider to "http://localhost:8545" 
+
+in /react-note/ run
 ```shell
 npm start
 ```
