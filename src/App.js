@@ -67,6 +67,9 @@ class App extends Component {
             from: config.ETHEREUM_CLIENT.eth.accounts[0],
             gas: 3000000
         });
+        if (result == true) {
+        } else {
+        }
         this.getNotes();
     }
 
