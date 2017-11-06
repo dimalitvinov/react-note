@@ -5,7 +5,6 @@ import logo from './ethereum.png';
 import * as config from './config.js';
 
 class App extends Component {
-
     constructor(props) {
         super(props);
 
@@ -28,7 +27,7 @@ class App extends Component {
             str += String.fromCharCode(code);
         }
         return str;
-    };
+    }
 
     editNote = field => {
         let item = config.NotesContract.editNote.sendTransaction(field.id, field.text, {
@@ -67,9 +66,7 @@ class App extends Component {
             from: config.ETHEREUM_CLIENT.eth.accounts[0],
             gas: 3000000
         });
-        if (result == true) {
-        } else {
-        }
+        this.setState({newNote: ''});
         this.getNotes();
     }
 
@@ -93,6 +90,7 @@ class App extends Component {
                     <input autoFocus
                            className="main__input"
                            placeholder='Type your note here'
+                           value={this.state.newNote}
                            onChange={event => this.setState({newNote: event.target.value})}/>
                     <br/>
                     <button className="main__btn" onClick={() => this.addNewNote()}>
