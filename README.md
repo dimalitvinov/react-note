@@ -1,5 +1,9 @@
 # React-note for ethereum-note
 
+## Example:
+
+http://91.201.41.52/notechain/  
+
 ## For development:
 
 You need to get and deploy smart-contract from
@@ -49,7 +53,7 @@ truffle console
 copy abi and paste in "/react-note/src/config.js" like as "NotesContractABI"
 
 set in ETHEREUM_CLIENT line
-HttpProvider to "http://localhost:8545" 
+HttpProvider to "http://localhost:8545"
 
 in /react-note/ run
 ```shell
